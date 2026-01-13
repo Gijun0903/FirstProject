@@ -1,0 +1,727 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+            /* Starry night effect */
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image: radial-gradient(2px 2px at 20px 30px, white, transparent), radial-gradient(2px 2px at 60px 70px, white, transparent), radial-gradient(1px 1px at 50px 50px, white, transparent), radial-gradient(1px 1px at 130px 80px, white, transparent), radial-gradient(2px 2px at 90px 10px, white, transparent);
+                background-repeat: repeat;
+                background-size: 200px 200px;
+                opacity: 0.5;
+                animation: twinkle 3s infinite;
+                pointer-events: none;
+            }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        .container {
+            background: rgba(255, 248, 240, 0.95);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            text-align: center;
+            max-width: 600px;
+            animation: fadeIn 1s ease-in;
+            position: relative;
+            border: 2px solid rgba(139, 90, 43, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-family: 'Times New Roman', Times, serif;
+            color: #8b4513;
+            font-size: 3em;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        p {
+            color: #2c1810;
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin: 20px 0;
+            font-weight: 400;
+        }
+
+        .message {
+            background: rgba(255, 239, 213, 0.6);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border-left: 5px solid #8b4513;
+            box-shadow: inset 0 2px 10px rgba(139, 69, 19, 0.1);
+        }
+
+        /* Photo gallery styles */
+        .photo-gallery {
+            margin: 40px 0;
+            padding: 30px;
+            background: rgba(255, 239, 213, 0.6);
+            border-radius: 15px;
+            border: 2px solid #8b4513;
+            box-shadow: 0 5px 20px rgba(139, 69, 19, 0.2);
+        }
+
+        .gallery-title {
+            font-size: 1.5em;
+            color: #8b4513;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .photo-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            border: 2px solid #8b4513;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            background: #f5f5f5;
+        }
+
+            .photo-item:hover {
+                transform: scale(1.05);
+            }
+
+            .photo-item img {
+                width: 100%;
+                height: 100%;
+                max-height: 250px;
+                object-fit: cover;
+                display: block;
+            }
+
+        .photo-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px;
+            font-size: 0.8em;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .photo-item:hover .photo-caption {
+            opacity: 1;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 600px) {
+            .photo-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .photo-item img {
+                max-height: 200px;
+            }
+
+            .container {
+                padding: 30px 20px;
+            }
+        }
+
+        .photo-description {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #2c1810;
+            font-style: italic;
+            margin-top: 15px;
+        }
+
+        /* Lightbox for full image view */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+            .lightbox.active {
+                display: flex;
+            }
+
+            .lightbox img {
+                max-width: 90%;
+                max-height: 90%;
+                object-fit: contain;
+                border-radius: 10px;
+                box-shadow: 0 5px 30px rgba(0,0,0,0.5);
+            }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 3em;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+            .lightbox-close:hover {
+                color: #e74c3c;
+            }
+
+        footer {
+            margin-top: 30px;
+            color: #8b7355;
+            font-size: 0.9em;
+        }
+
+        .music-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #8b4513;
+            color: #fff8f0;
+            border: none;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            font-size: 2em;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.6);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+            .music-button:hover {
+                background: #654321;
+                transform: scale(1.1);
+            }
+
+            .music-button.playing {
+                animation: pulse 2s infinite;
+            }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .music-tooltip {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background: rgba(255, 248, 240, 0.95);
+            color: #2c1810;
+            padding: 10px 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            font-size: 0.9em;
+            animation: fadeIn 0.5s ease-in;
+            z-index: 999;
+            border: 1px solid #8b7355;
+        }
+
+            .music-tooltip.hidden {
+                display: none;
+            }
+
+        .question-section {
+            margin: 30px 0;
+            padding: 30px;
+            background: rgba(255, 239, 213, 0.7);
+            border-radius: 15px;
+            border: 2px solid #8b4513;
+            box-shadow: 0 5px 20px rgba(139, 69, 19, 0.2);
+        }
+
+            .question-section h2 {
+                font-family: 'Times New Roman', Times, serif;
+                color: #8b4513;
+                font-size: 1.8em;
+                margin-bottom: 20px;
+                font-weight: bold;
+            }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.1em;
+            font-family: 'Times New Roman', Times, serif;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .btn-yes {
+            background: #27ae60;
+            color: white;
+        }
+
+            .btn-yes:hover {
+                background: #229954;
+                transform: scale(1.05);
+            }
+
+        .btn-no {
+            background: #7f8c8d;
+            color: white;
+        }
+
+            .btn-no:hover {
+                background: #6c7a7b;
+                transform: scale(1.05);
+            }
+
+        .datetime-form {
+            display: none;
+            margin-top: 25px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+            .datetime-form.show {
+                display: block;
+            }
+
+        .form-group {
+            margin: 15px 0;
+        }
+
+            .form-group label {
+                display: block;
+                color: #2c1810;
+                font-weight: bold;
+                margin-bottom: 8px;
+                font-size: 1.1em;
+            }
+
+            .form-group input {
+                width: 100%;
+                padding: 12px;
+                border: 2px solid #8b7355;
+                border-radius: 8px;
+                font-size: 1em;
+                font-family: 'Times New Roman', Times, serif;
+                box-sizing: border-box;
+                background: rgba(255, 255, 255, 0.9);
+            }
+
+                .form-group input:focus {
+                    outline: none;
+                    border-color: #8b4513;
+                    box-shadow: 0 0 10px rgba(139, 69, 19, 0.3);
+                }
+
+        .btn-submit {
+            background: #8b4513;
+            color: white;
+            margin-top: 15px;
+        }
+
+            .btn-submit:hover {
+                background: #654321;
+            }
+
+        .response-message {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(212, 237, 218, 0.9);
+            color: #155724;
+            border-radius: 10px;
+            border: 2px solid #c3e6cb;
+            font-size: 1.1em;
+        }
+
+            .response-message.show {
+                display: block;
+                animation: fadeIn 0.5s ease-in;
+            }
+
+        .sad-message {
+            background: rgba(248, 215, 218, 0.9);
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        .recorded-message {
+            background: rgba(173, 216, 230, 0.9);
+            color: #004085;
+            border-color: #b8daff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hidden background music -->
+    <audio id="bgMusic" preload="auto">
+        <source src="/static/music/sorry.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Lightbox for full image view -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightbox-img" src="" alt="Full size image">
+    </div>
+
+    <div class="container">
+        <h1>I'm Truly Sorry</h1>
+
+        <div class="message">
+            <p><strong style="font-size: 1.5em; color: #8b4513;">M</strong>y Dearest Kenzy, I hope you're doing well.</p>
+
+            <p><strong style="font-size: 1.5em; color: #8b4513;">C</strong>an you please take just a minute to read this? I need to tell you how deeply sorry I am for hurting you and for the actions that led to a loss of trust between us.</p>
+
+            <p><strong style="font-size: 1.5em; color: #8b4513;">K</strong>enzy, I am truly sorry for my actions and the words I've said that caused you pain, especially in California. Looking back, you deserved so much more respect and kindness that I failed to give you.</p>
+
+            <p><strong style="font-size: 1.5em; color: #8b4513;">E</strong>ventually, If I look back, I was the one who always caused problems and problems.</p>
+
+            <p><strong style="font-size: 1.5em; color: #8b4513;">N</strong>ever, I will never be a person like that anymore, and I am committed to learning from this and becoming a better person.</p>
+
+            <p><strong style="font-size: 1.5em; color: #8b4513;">Z</strong>ealously, I am working on myself so that I never repeat these mistakes. I want to be a person who respects others and treats kindness and has more heart.</p>
+
+            <p><strong style="font-size: 1.5em; color: #8b4513;">Y</strong>ou don't have to reply to this if you aren't ready. I respect your space and your boundaries completely, and I only wish for your happiness and peace of mind.</p>
+            <p><strong>I Love you, June</strong></p>
+        </div>
+
+
+        <!-- Photo Gallery -->
+        <div class="photo-gallery">
+            <h3 class="gallery-title">Our Precious Moments Together</h3>
+            <div class="photo-grid">
+                <div class="photo-item" onclick="openLightbox('/static/images/us1.jpg')">
+                    <img src="/static/images/us1.jpg" alt="Memory 1" loading="lazy">
+                    <div class="photo-caption">Our first date in Westgate</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us2.jpg')">
+                    <img src="/static/images/us2.jpg" alt="Memory 2" loading="lazy">
+                    <div class="photo-caption">At the pancake place</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us3.jpg')">
+                    <img src="/static/images/us3.jpg" alt="Memory 3" loading="lazy">
+                    <div class="photo-caption">Tanger pizza place</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us4.jpg')">
+                    <img src="/static/images/us4.jpg" alt="Memory 4" loading="lazy">
+                    <div class="photo-caption">Funny pics</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us5.jpg')">
+                    <img src="/static/images/us5.jpg" alt="Memory 5" loading="lazy">
+                    <div class="photo-caption">Chick-fil-a, you were so cute</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us6.jpg')">
+                    <img src="/static/images/us6.jpg" alt="Memory 6" loading="lazy">
+                    <div class="photo-caption">Pheonix zoo</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us7.jpg')">
+                    <img src="/static/images/us7.jpg" alt="Memory 7" loading="lazy">
+                    <div class="photo-caption">At the parking lot</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us8.jpg')">
+                    <img src="/static/images/us8.jpg" alt="Memory 8" loading="lazy">
+                    <div class="photo-caption">First time Olive Garden with you</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us9.jpg')">
+                    <img src="/static/images/us9.jpg" alt="Memory 9" loading="lazy">
+                    <div class="photo-caption">Getting your first nail</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us10.jpg')">
+                    <img src="/static/images/us10.jpg" alt="Memory 10" loading="lazy">
+                    <div class="photo-caption">Ramen Place, we ate Caviar!</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us11.jpg')">
+                    <img src="/static/images/us11.jpg" alt="Memory 11" loading="lazy">
+                    <div class="photo-caption">Pier 88, Mesa</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us12.jpg')">
+                    <img src="/static/images/us12.jpg" alt="Memory 12" loading="lazy">
+                    <div class="photo-caption">Hunting Shop</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us13.jpg')">
+                    <img src="/static/images/us13.jpg" alt="Memory 13" loading="lazy">
+                    <div class="photo-caption">Korean BBQ with you</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us14.jpg')">
+                    <img src="/static/images/us14.jpg" alt="Memory 14" loading="lazy">
+                    <div class="photo-caption">Tennis!, it was a workout</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us15.jpg')">
+                    <img src="/static/images/us15.jpg" alt="Memory 15" loading="lazy">
+                    <div class="photo-caption">your birthday</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us16.jpg')">
+                    <img src="/static/images/us16.jpg" alt="Memory 16" loading="lazy">
+                    <div class="photo-caption">Santa Monica Pier</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us17.jpg')">
+                    <img src="/static/images/us17.jpg" alt="Memory 17" loading="lazy">
+                    <div class="photo-caption">biggest seafood boil eating ever!</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us18.jpg')">
+                    <img src="/static/images/us18.jpg" alt="Memory 18" loading="lazy">
+                    <div class="photo-caption">Got my glasses and Tesla store</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us19.jpg')">
+                    <img src="/static/images/us19.jpg" alt="Memory 19" loading="lazy">
+                    <div class="photo-caption">Zoo at Litchfield</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us20.jpg')">
+                    <img src="/static/images/us20.jpg" alt="Memory 20" loading="lazy">
+                    <div class="photo-caption">When you got my hat</div>
+                </div>
+                <div class="photo-item" onclick="openLightbox('/static/images/us21.jpg')">
+                    <img src="/static/images/us21.jpg" alt="Memory 21" loading="lazy">
+                    <div class="photo-caption">soulmate </div>
+                </div>
+            </div>
+            <div class="photo-description">
+                <p>Every single one of these moments is in my heart. Each photo represents a piece of our story that I treasure deeply. I hope we can create many more memories together.</p>
+            </div>
+        </div>
+
+        <!-- Question Section -->
+        <div class="question-section">
+            <h2>Will you summon a random dude with Aritzia at West Gate?</h2>
+            <p style="font-size: 0.95em; color: #5d4e37; margin-bottom: 10px;">(Where we first met)</p>
+
+            <div class="button-group">
+                <button class="btn btn-yes" id="yesBtn">Yes!</button>
+                <button class="btn btn-no" id="noBtn">No</button>
+            </div>
+
+            <!-- Date/Time Form (hidden initially) -->
+            <div class="datetime-form" id="datetimeForm">
+                <h3 style="font-family: 'Times New Roman', Times, serif; color: #8b4513; margin-bottom: 15px; font-size: 1.5em;">When do you want to summon?</h3>
+                <form id="meetingForm">
+                    <div class="form-group">
+                        <label for="meetDate">Date:</label>
+                        <input type="date" id="meetDate" name="meetDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="meetTime">Time:</label>
+                        <input type="time" id="meetTime" name="meetTime" required>
+                    </div>
+                    <button type="submit" class="btn btn-submit">Confirm Meeting</button>
+                </form>
+            </div>
+
+            <!-- Hidden iframe for Google Form submission -->
+            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+            <!-- Response Messages -->
+            <div class="response-message" id="responseMessage"></div>
+        </div>
+
+        <footer>
+            <p>&copy; {{ year }}</p>
+        </footer>
+    </div>
+
+    <!-- Music button in bottom-right corner -->
+    <div class="music-tooltip" id="musicTooltip">Music is playing</div>
+    <button class="music-button" id="musicButton">⏸️</button>
+
+    <script>
+        // ⚠️ REPLACE THESE WITH YOUR GOOGLE FORM ENTRY IDs
+        var GOOGLE_FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLScxWT-UYBMst9S97OdS1aOa_S95Sz0LEAWHKk3xGNA7lIHRww/formResponse';
+        var ENTRY_RESPONSE = 'entry.2119874898'; // Replace with your "Will you meet me?" entry ID
+        var ENTRY_DATE = 'entry.52771458';     // Replace with your "Meeting Date" entry ID
+        var ENTRY_TIME = 'entry.608359628';     // Replace with your "Meeting Time" entry ID
+
+        // Lightbox functions
+        function openLightbox(imageSrc) {
+            document.getElementById('lightbox-img').src = imageSrc;
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        // Submit to Google Form
+        function submitToGoogleForm(response, date, time) {
+            var formData = new FormData();
+            formData.append(ENTRY_RESPONSE, response);
+            if (date) formData.append(ENTRY_DATE, date);
+            if (time) formData.append(ENTRY_TIME, time);
+
+            fetch(GOOGLE_FORM_ACTION, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: formData
+            });
+        }
+
+        // Get all elements
+        var bgMusic = document.getElementById('bgMusic');
+        var musicButton = document.getElementById('musicButton');
+        var musicTooltip = document.getElementById('musicTooltip');
+        var yesBtn = document.getElementById('yesBtn');
+        var noBtn = document.getElementById('noBtn');
+        var datetimeForm = document.getElementById('datetimeForm');
+        var responseMessage = document.getElementById('responseMessage');
+        var meetingForm = document.getElementById('meetingForm');
+
+        var startTime = 46;
+        var endTime = 85;
+        var isPlaying = false;
+
+        // AUTOPLAY: Start music when page loads
+        window.addEventListener('load', function () {
+            bgMusic.currentTime = startTime;
+            var playPromise = bgMusic.play();
+
+            if (playPromise !== undefined) {
+                playPromise.then(function () {
+                    isPlaying = true;
+                    musicButton.textContent = '⏸️';
+                    musicButton.classList.add('playing');
+                }).catch(function (error) {
+                    musicTooltip.textContent = 'Click to play music';
+                    musicButton.textContent = '🎵';
+
+                    document.body.addEventListener('click', function startMusic() {
+                        bgMusic.currentTime = startTime;
+                        bgMusic.play().then(function () {
+                            isPlaying = true;
+                            musicButton.textContent = '⏸️';
+                            musicButton.classList.add('playing');
+                            musicTooltip.classList.add('hidden');
+                        });
+                        document.body.removeEventListener('click', startMusic);
+                    }, { once: true });
+                });
+            }
+        });
+
+        setTimeout(function () {
+            musicTooltip.classList.add('hidden');
+        }, 3000);
+
+        musicButton.addEventListener('click', function () {
+            musicTooltip.classList.add('hidden');
+
+            if (isPlaying) {
+                bgMusic.pause();
+                musicButton.textContent = '🎵';
+                musicButton.classList.remove('playing');
+                isPlaying = false;
+            } else {
+                bgMusic.currentTime = startTime;
+                bgMusic.play().then(function () {
+                    musicButton.textContent = '⏸️';
+                    musicButton.classList.add('playing');
+                    isPlaying = true;
+                });
+            }
+        });
+
+        bgMusic.addEventListener('timeupdate', function () {
+            if (isPlaying && bgMusic.currentTime >= endTime) {
+                bgMusic.currentTime = startTime;
+            }
+        });
+
+        yesBtn.addEventListener('click', function () {
+            datetimeForm.classList.add('show');
+            responseMessage.classList.remove('show');
+        });
+
+        noBtn.addEventListener('click', function () {
+            // Submit "No" to Google Form
+            submitToGoogleForm('No', '', '');
+
+            // Show message
+            responseMessage.innerHTML = 'Your response has been recorded.<br><br>I understand... I wish you best and I want you to be happy!';
+            responseMessage.className = 'response-message recorded-message show';
+            datetimeForm.classList.remove('show');
+        });
+
+        meetingForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            var date = document.getElementById('meetDate').value;
+            var time = document.getElementById('meetTime').value;
+
+            // Submit "Yes" with date/time to Google Form
+            submitToGoogleForm('Yes', date, time);
+
+            var dateObj = new Date(date + 'T' + time);
+            var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            var formattedDate = dateObj.toLocaleDateString('en-US', options);
+            var formattedTime = dateObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+            responseMessage.innerHTML = 'Your response has been recorded.<br><br>YES! I can\'t wait to see you!<br><br>Date: <strong>' + formattedDate + '</strong><br>Time: <strong>' + formattedTime + '</strong><br><br>See you at West Gate, infront of the burger place where we first met!';
+            responseMessage.className = 'response-message show';
+            datetimeForm.classList.remove('show');
+        });
+    </script>
+</body>
+</html>
