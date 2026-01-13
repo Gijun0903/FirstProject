@@ -65,6 +65,7 @@
     <Content Include="FIrstProject\static\images\us9.jpg" />
     <Content Include="FIrstProject\static\music\sorry.mp3" />
     <Content Include="FIrstProject\templates\sorry.html" />
+    <Content Include="Procfile" />
     <Content Include="requirements.txt" />
     <Content Include="FIrstProject\static\content\bootstrap.css" />
     <Content Include="FIrstProject\static\content\bootstrap.min.css" />
